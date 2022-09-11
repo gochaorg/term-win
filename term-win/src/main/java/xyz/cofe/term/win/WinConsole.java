@@ -115,14 +115,46 @@ public class WinConsole {
     public ConsoleMode getConsoleMode(){
         IntByReference outputMode = new IntByReference();
         if( !rawAPI().GetConsoleMode(outputHandle,outputMode) ){
-            throwError("GetConsoleMode(stdOutput)");
+            throwError("GetConsoleMode(outputHandle)");
+        }
+
+        IntByReference errorMode = new IntByReference();
+        if( !rawAPI().GetConsoleMode(errorHandle,outputMode) ){
+            throwError("GetConsoleMode(errorHandle)");
         }
 
         IntByReference inputMode = new IntByReference();
         if( !rawAPI().GetConsoleMode(inputHandle,inputMode) ){
-            throwError("GetConsoleMode(stdInput)");
+            throwError("GetConsoleMode(inputHandle)");
         }
 
-        return new ConsoleMode(outputMode.getValue(), inputMode.getValue());
+        return new ConsoleMode(outputMode.getValue(), errorMode.getValue(), inputMode.getValue());
+    }
+
+    public void setConsoleMode(ConsoleMode mode, boolean output, boolean error, boolean input){
+        if( mode==null )throw new IllegalArgumentException("mode==null");
+
+        if( output ) {
+            if (!rawAPI().SetConsoleMode(outputHandle, mode.getOutputFlags())) {
+                throwError("SetConsoleMode(outputHandle," + mode.getOutputFlags() + ")");
+            }
+        }
+
+        if( error ) {
+            if (!rawAPI().SetConsoleMode(errorHandle, mode.getErrorFlags())) {
+                throwError("SetConsoleMode(errorHandle," + mode.getOutputFlags() + ")");
+            }
+        }
+
+        if( input ) {
+            if (!rawAPI().SetConsoleMode(inputHandle, mode.getInputFlags())) {
+                throwError("SetConsoleMode(inputHandle," + mode.getInputFlags() + ")");
+            }
+        }
+    }
+
+    public void setConsoleMode(ConsoleMode mode){
+        if( mode==null )throw new IllegalArgumentException("mode==null");
+        setConsoleMode(mode, true, true, true);
     }
 }
