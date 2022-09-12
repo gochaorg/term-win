@@ -3,7 +3,11 @@ package xyz.cofe.term.win;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32Util;
 import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.platform.win32.Wincon;
 import com.sun.jna.ptr.IntByReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static xyz.cofe.term.win.WinConsoleError.throwError;
 
@@ -19,6 +23,7 @@ public class WinConsole {
         }
     }
 
+    //region stdOutputHandle, stdInputHandle, stdErrorHandle
     private static volatile WinNT.HANDLE stdOutputHandle;
     public static WinNT.HANDLE getStdOutputHandle(){
         if( stdOutputHandle !=null )return stdOutputHandle;
@@ -60,6 +65,7 @@ public class WinConsole {
             return stdErrorHandle;
         }
     }
+    //endregion
 
     private static volatile boolean allocated;
 
@@ -88,11 +94,12 @@ public class WinConsole {
         errorHandle = getStdErrorHandle();
     }
 
+    //region title : String
     /**
      * Retrieves the title for the current console window.
      * @return title
      */
-    public String getTitle(){
+    public synchronized String getTitle(){
         char[] buff = new char[1024*64];
         var charsCount = rawAPI().GetConsoleTitleW(buff,buff.length);
         if( charsCount==0 ){
@@ -105,14 +112,15 @@ public class WinConsole {
      * Sets the title for the current console window.
      * @param title title
      */
-    public void setTitle(String title){
+    public synchronized void setTitle(String title){
         if( title==null )throw new IllegalArgumentException("title==null");
         if( !rawAPI().SetConsoleTitleW(title) ){
             throwError("SetConsoleTitleW");
         }
     }
-
-    public ConsoleMode getConsoleMode(){
+    //endregion
+    //region consoleMode : ConsoleMode
+    public synchronized ConsoleMode getConsoleMode(){
         IntByReference outputMode = new IntByReference();
         if( !rawAPI().GetConsoleMode(outputHandle,outputMode) ){
             throwError("GetConsoleMode(outputHandle)");
@@ -131,7 +139,7 @@ public class WinConsole {
         return new ConsoleMode(outputMode.getValue(), errorMode.getValue(), inputMode.getValue());
     }
 
-    public void setConsoleMode(ConsoleMode mode, boolean output, boolean error, boolean input){
+    public synchronized void setConsoleMode(ConsoleMode mode, boolean output, boolean error, boolean input){
         if( mode==null )throw new IllegalArgumentException("mode==null");
 
         if( output ) {
@@ -153,8 +161,49 @@ public class WinConsole {
         }
     }
 
-    public void setConsoleMode(ConsoleMode mode){
+    public synchronized void setConsoleMode(ConsoleMode mode){
         if( mode==null )throw new IllegalArgumentException("mode==null");
         setConsoleMode(mode, true, true, true);
+    }
+    //endregion
+
+    public synchronized ScreenBufferInfo getScreenBufferInfo(){
+        var info = new Wincon.CONSOLE_SCREEN_BUFFER_INFO();
+        if( !rawAPI().GetConsoleScreenBufferInfo(outputHandle,info) ){
+            throwError("GetConsoleScreenBufferInfo(outputHandle)");
+        }
+        return new ScreenBufferInfo(info);
+    }
+
+    public synchronized int availableInputEventsCount(){
+        var cnt = new IntByReference();
+        if( !rawAPI().GetNumberOfConsoleInputEvents(inputHandle,cnt) ){
+            throwError("GetNumberOfConsoleInputEvents(inputHandle,cnt)");
+        }
+        return cnt.getValue();
+    }
+
+    public synchronized List<InputEvent> readInput(int eventCount){
+        if( eventCount<0 )throw new IllegalArgumentException("eventCount<0");
+        if( eventCount==0 )return List.of();
+
+        var inputRecords = new Wincon.INPUT_RECORD[eventCount];
+        var readed = new IntByReference();
+        if( !rawAPI().ReadConsoleInputW(inputHandle,inputRecords,inputRecords.length,readed) ){
+            throwError("ReadConsoleInput(inputHandle,inputRecords,inputRecords.length,readed)");
+        }
+
+        var cnt = readed.getValue();
+        if( cnt<=0 )return List.of();
+
+        var events = new ArrayList<InputEvent>();
+        for( var i=0; i<cnt; i++ ){
+            InputEvent.read(inputRecords[i]).ifPresent(events::add);
+        }
+        return events;
+    }
+
+    public synchronized List<InputEvent> readInput(){
+        return readInput(availableInputEventsCount());
     }
 }

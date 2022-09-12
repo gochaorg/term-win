@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jna.version>5.12.1</jna.version>
         <runner.app.name>app</runner.app.name>
-        <runner.app.main-class>xyz.cofe.term.win.test.Test01</runner.app.main-class>
+        <runner.app.main-class>xyz.cofe.term.win.test.MainFrame</runner.app.main-class>
         <runner.app.bat.name>${runner.app.name}.bat</runner.app.bat.name>
         <runner.app.java.exe>javaw</runner.app.java.exe>
     </properties>
