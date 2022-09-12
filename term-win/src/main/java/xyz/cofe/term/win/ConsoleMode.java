@@ -205,21 +205,12 @@ public class ConsoleMode {
     private int inputFlags;
     public int getInputFlags(){ return inputFlags; }
 
-    private static boolean has(int flags, BitFlag bitFlag){
-        return (flags & bitFlag.bitFlag()) == bitFlag.bitFlag();
-    }
-    private static int _switch(int flags, BitFlag bitFlag, boolean switchOn ){
-        return switchOn
-                ? flags | bitFlag.bitFlag()
-                : flags & (~bitFlag.bitFlag());
-    }
-
     //region ENABLE_PROCESSED_OUTPUT
     /**
      * read flag {@link ScreenBufferFlags#ENABLE_PROCESSED_OUTPUT}
      * @return value
      */
-    public boolean isEnableProcessedOutput(){ return has(outputFlags, ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT); }
+    public boolean isEnableProcessedOutput(){ return ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT.has(outputFlags); }
 
     /**
      * switch flag {@link ScreenBufferFlags#ENABLE_PROCESSED_OUTPUT}
@@ -227,7 +218,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableProcessedOutput(boolean switchOn){
-        return new ConsoleMode(_switch(outputFlags,ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT,switchOn), errorFlags, inputFlags);
+        return new ConsoleMode(ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT.update(outputFlags,switchOn), errorFlags, inputFlags);
     }
     //endregion
     //region ENABLE_PROCESSED_OUTPUT StdError
@@ -235,7 +226,7 @@ public class ConsoleMode {
      * read flag {@link ScreenBufferFlags#ENABLE_PROCESSED_OUTPUT} for stdErr
      * @return value
      */
-    public boolean isEnableProcessedError(){ return has(errorFlags, ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT); }
+    public boolean isEnableProcessedError(){ return ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT.has(errorFlags); }
 
     /**
      * switch flag {@link ScreenBufferFlags#ENABLE_PROCESSED_OUTPUT} for stdErr
@@ -243,7 +234,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableProcessedError(boolean switchOn){
-        return new ConsoleMode(outputFlags,_switch(errorFlags,ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT,switchOn), inputFlags);
+        return new ConsoleMode(outputFlags,ScreenBufferFlags.ENABLE_PROCESSED_OUTPUT.update(errorFlags,switchOn), inputFlags);
     }
     //endregion
 
@@ -253,7 +244,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableWrapAtEolOutput(){
-        return has(outputFlags,ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT);
+        return ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT.has(outputFlags);
     }
 
     /**
@@ -262,7 +253,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableWrapAtEolOutput(boolean switchOn){
-        return new ConsoleMode(_switch(outputFlags,ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT,switchOn), errorFlags, inputFlags);
+        return new ConsoleMode(ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT.update(outputFlags,switchOn), errorFlags, inputFlags);
     }
     //endregion
     //region ENABLE_WRAP_AT_EOL_OUTPUT StdErr
@@ -271,7 +262,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableWrapAtEolError(){
-        return has(errorFlags,ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT);
+        return ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT.has(errorFlags);
     }
 
     /**
@@ -280,7 +271,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableWrapAtEolError(boolean switchOn){
-        return new ConsoleMode(outputFlags, _switch(errorFlags,ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT,switchOn), inputFlags);
+        return new ConsoleMode(outputFlags, ScreenBufferFlags.ENABLE_WRAP_AT_EOL_OUTPUT.update(errorFlags,switchOn), inputFlags);
     }
     //endregion
 
@@ -290,7 +281,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableVirtualTerminalProcessing(){
-        return has(outputFlags,ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        return ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING.has(outputFlags);
     }
 
     /**
@@ -299,7 +290,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableVirtualTerminalProcessing(boolean switchOn){
-        return new ConsoleMode(_switch(outputFlags,ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING,switchOn), errorFlags, inputFlags);
+        return new ConsoleMode(ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING.update(outputFlags,switchOn), errorFlags, inputFlags);
     }
     //endregion
     //region ENABLE_VIRTUAL_TERMINAL_PROCESSING StdErr
@@ -308,7 +299,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableVirtualTerminalProcessingError(){
-        return has(errorFlags,ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        return ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING.has(errorFlags);
     }
 
     /**
@@ -317,7 +308,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableVirtualTerminalProcessingError(boolean switchOn){
-        return new ConsoleMode(outputFlags, _switch(errorFlags,ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING,switchOn), inputFlags);
+        return new ConsoleMode(outputFlags, ScreenBufferFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING.update(errorFlags,switchOn), inputFlags);
     }
     //endregion
 
@@ -327,7 +318,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isDisableNewLineAutoReturn(){
-        return has(outputFlags,ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN);
+        return ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN.has(outputFlags);
     }
 
     /**
@@ -336,7 +327,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode disableNewLineAutoReturn(boolean disable){
-        return new ConsoleMode(_switch(outputFlags,ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN,disable),errorFlags, inputFlags);
+        return new ConsoleMode(ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN.update(outputFlags,disable),errorFlags, inputFlags);
     }
     //endregion
     //region DISABLE_NEWLINE_AUTO_RETURN StdErr
@@ -345,7 +336,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isDisableNewLineAutoReturnError(){
-        return has(errorFlags,ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN);
+        return ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN.has(errorFlags);
     }
 
     /**
@@ -354,7 +345,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode disableNewLineAutoReturnError(boolean disable){
-        return new ConsoleMode(outputFlags,_switch(errorFlags,ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN,disable), inputFlags);
+        return new ConsoleMode(outputFlags,ScreenBufferFlags.DISABLE_NEWLINE_AUTO_RETURN.update(errorFlags,disable), inputFlags);
     }
     //endregion
 
@@ -364,7 +355,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableLVBGridWorldWide(){
-        return has(outputFlags,ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE);
+        return ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE.has(outputFlags);
     }
 
     /**
@@ -373,7 +364,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableLVBGridWorldWide(boolean switchOn){
-        return new ConsoleMode(_switch(outputFlags,ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE,switchOn),errorFlags, inputFlags);
+        return new ConsoleMode(ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE.update(outputFlags,switchOn),errorFlags, inputFlags);
     }
     //endregion
     //region ENABLE_LVB_GRID_WORLDWIDE StdErr
@@ -382,7 +373,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableLVBGridWorldWideError(){
-        return has(errorFlags,ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE);
+        return ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE.has(errorFlags);
     }
 
     /**
@@ -391,7 +382,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableLVBGridWorldWideError(boolean switchOn){
-        return new ConsoleMode(outputFlags,_switch(errorFlags,ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE,switchOn), inputFlags);
+        return new ConsoleMode(outputFlags,ScreenBufferFlags.ENABLE_LVB_GRID_WORLDWIDE.update(errorFlags,switchOn), inputFlags);
     }
     //endregion
 
@@ -401,7 +392,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableEchoInput(){
-        return has(inputFlags,InputFlags.ENABLE_ECHO_INPUT);
+        return InputFlags.ENABLE_ECHO_INPUT.has(inputFlags);
     }
 
     /**
@@ -410,7 +401,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableEchoInput(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_ECHO_INPUT,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_ECHO_INPUT.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_INSERT_MODE
@@ -419,7 +410,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableInsertMode(){
-        return has(inputFlags,InputFlags.ENABLE_INSERT_MODE);
+        return InputFlags.ENABLE_INSERT_MODE.has(inputFlags);
     }
 
     /**
@@ -428,7 +419,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableInsertMode(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_INSERT_MODE,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_INSERT_MODE.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_LINE_INPUT
@@ -437,7 +428,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableLineInput(){
-        return has(inputFlags,InputFlags.ENABLE_LINE_INPUT);
+        return InputFlags.ENABLE_LINE_INPUT.has(inputFlags);
     }
 
     /**
@@ -446,7 +437,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableLineInput(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_LINE_INPUT,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_LINE_INPUT.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_MOUSE_INPUT
@@ -455,7 +446,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableMouseInput(){
-        return has(inputFlags,InputFlags.ENABLE_MOUSE_INPUT);
+        return InputFlags.ENABLE_MOUSE_INPUT.has(inputFlags);
     }
 
     /**
@@ -464,7 +455,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableMouseInput(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_MOUSE_INPUT,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_MOUSE_INPUT.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_PROCESSED_INPUT
@@ -473,7 +464,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableProcessedInput(){
-        return has(inputFlags,InputFlags.ENABLE_PROCESSED_INPUT);
+        return InputFlags.ENABLE_PROCESSED_INPUT.has(inputFlags);
     }
 
     /**
@@ -482,7 +473,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableProcessedInput(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_PROCESSED_INPUT,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_PROCESSED_INPUT.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_QUICK_EDIT_MODE
@@ -491,7 +482,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableQuickEditMode(){
-        return has(inputFlags,InputFlags.ENABLE_QUICK_EDIT_MODE);
+        return InputFlags.ENABLE_QUICK_EDIT_MODE.has(inputFlags);
     }
 
     /**
@@ -500,7 +491,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableQuickEditMode(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_QUICK_EDIT_MODE,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_QUICK_EDIT_MODE.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_WINDOW_INPUT
@@ -509,7 +500,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableWindowInput(){
-        return has(inputFlags,InputFlags.ENABLE_WINDOW_INPUT);
+        return InputFlags.ENABLE_WINDOW_INPUT.has(inputFlags);
     }
 
     /**
@@ -518,7 +509,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableWindowInput(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_WINDOW_INPUT,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_WINDOW_INPUT.update(inputFlags,switchOn));
     }
     //endregion
     //region ENABLE_VIRTUAL_TERMINAL_INPUT
@@ -527,7 +518,7 @@ public class ConsoleMode {
      * @return value
      */
     public boolean isEnableVirtualTerminalInput(){
-        return has(inputFlags,InputFlags.ENABLE_VIRTUAL_TERMINAL_INPUT);
+        return InputFlags.ENABLE_VIRTUAL_TERMINAL_INPUT.has(inputFlags);
     }
 
     /**
@@ -536,7 +527,7 @@ public class ConsoleMode {
      * @return new mode with switched flag
      */
     public ConsoleMode enableVirtualTerminalInput(boolean switchOn){
-        return new ConsoleMode(outputFlags,errorFlags,_switch(inputFlags,InputFlags.ENABLE_VIRTUAL_TERMINAL_INPUT,switchOn));
+        return new ConsoleMode(outputFlags,errorFlags,InputFlags.ENABLE_VIRTUAL_TERMINAL_INPUT.update(inputFlags,switchOn));
     }
     //endregion
 }
