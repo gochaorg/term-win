@@ -2,15 +2,41 @@ package xyz.cofe.term.win;
 
 import com.sun.jna.platform.win32.Wincon;
 
+import java.util.ArrayList;
+
 public class ScreenBufferInfo {
-    public final int xCursor;
-    public final int yCursor;
+    private final int xCursor;
+    public int getXCursor() {
+        return xCursor;
+    }
 
-    public final int width;
-    public final int height;
+    private final int yCursor;
 
-    public final int widthMax;
-    public final int heightMax;
+    public int getYCursor() {
+        return yCursor;
+    }
+
+    private final int width;
+    public int getWidth() {
+        return width;
+    }
+
+    private final int height;
+
+    public int getHeight() {
+        return height;
+    }
+
+    private final int widthMax;
+    public int getWidthMax() {
+        return widthMax;
+    }
+
+    private final int heightMax;
+
+    public int getHeightMax() {
+        return heightMax;
+    }
 
     public ScreenBufferInfo(Wincon.CONSOLE_SCREEN_BUFFER_INFO info){
         if( info==null )throw new IllegalArgumentException("info==null");
@@ -20,5 +46,21 @@ public class ScreenBufferInfo {
         height = info.dwSize.Y;
         widthMax = info.dwMaximumWindowSize.X;
         heightMax = info.dwMaximumWindowSize.Y;
+    }
+
+    public String toString(){
+        var sb = new StringBuilder();
+        var ls = new ArrayList<String>();
+        ls.add("xCursor="+xCursor);
+        ls.add("yCursor="+yCursor);
+        ls.add("width="+width);
+        ls.add("height="+height);
+        ls.add("widthMax="+widthMax);
+        ls.add("heightMax="+heightMax);
+
+        sb.append("ScreenBufferInfo{");
+        sb.append(ls.stream().reduce("", (a,b)->a.length()>0 ? a+","+(b.length()>0 ? ","+b : "") : b));
+        sb.append("}");
+        return sb.toString();
     }
 }

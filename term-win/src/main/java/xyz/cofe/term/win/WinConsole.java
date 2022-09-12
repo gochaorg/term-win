@@ -2,6 +2,7 @@ package xyz.cofe.term.win;
 
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32Util;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.platform.win32.Wincon;
 import com.sun.jna.ptr.IntByReference;
@@ -205,5 +206,26 @@ public class WinConsole {
 
     public synchronized List<InputEvent> readInput(){
         return readInput(availableInputEventsCount());
+    }
+
+    public synchronized int writeOutput(String text){
+        if( text==null )throw new IllegalArgumentException("text==null");
+        if( text.length()<1 )return 0;
+
+        var written = new IntByReference();
+        if( !rawAPI().WriteConsoleW(outputHandle, text, text.length(), written, new WinDef.LPVOID()) ){
+            throwError("WriteConsoleW("+text+","+text.length()+",written,LPVOID)");
+        }
+
+        return written.getValue();
+    }
+
+    public synchronized void cursorOutput(int x, int y){
+        var pos = new WinConsoleRawAPI.COORDbyValue();
+        pos.X = (short)x;
+        pos.Y = (short)y;
+        if( !rawAPI().SetConsoleCursorPosition(outputHandle,pos) ){
+            throwError("SetConsoleCursorPosition(outputHandle,pos)");
+        }
     }
 }

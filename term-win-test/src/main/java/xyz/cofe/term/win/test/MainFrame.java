@@ -24,6 +24,9 @@ public class MainFrame extends JFrame {
     private boolean autoScroll = true;
 
     private void init(){
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(logScrollPane);
         timer.setRepeats(true);
@@ -50,6 +53,32 @@ public class MainFrame extends JFrame {
         lowerPanel.add(clear);
         clear.addActionListener(ev->{
             logTextPane.setText("");
+        });
+
+        var screenBuff = new JMenu("ScreenBuffer");
+        menuBar.add(screenBuff);
+
+        var screenBuffInfo = new JMenuItem("Screen buffer info");
+        screenBuff.add(screenBuffInfo);
+        screenBuffInfo.addActionListener(ev -> {
+            try {
+                logs(winConsole.getScreenBufferInfo().toString());
+            } catch (Throwable err){
+                logs(err.toString());
+            }
+        });
+
+        var consoleMode = new JMenu("ConsoleMode");
+        menuBar.add(consoleMode);
+
+        var consoleModeRead = new JMenuItem("info");
+        consoleMode.add(consoleModeRead);
+        consoleModeRead.addActionListener(ev -> {
+            try {
+                logs(winConsole.getConsoleMode().toString());
+            } catch (Throwable err){
+                logs(err.toString());
+            }
         });
     }
 
