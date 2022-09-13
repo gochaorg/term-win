@@ -25,6 +25,7 @@
         <runner.app.main-class>xyz.cofe.term.win.test.MainFrame</runner.app.main-class>
         <runner.app.bat.name>${runner.app.name}.bat</runner.app.bat.name>
         <runner.app.java.exe>javaw</runner.app.java.exe>
+        <junit.version>5.8.2</junit.version>
     </properties>
 
     <dependencyManagement>

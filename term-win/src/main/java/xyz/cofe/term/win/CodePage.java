@@ -2,6 +2,7 @@ package xyz.cofe.term.win;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 // https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
 // https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
@@ -159,15 +160,64 @@ public enum CodePage {
     UTF7(65000, "utf-7", "Unicode (UTF-7)"), // todo find
     UTF8(65001, "utf-8", "Unicode (UTF-8)", StandardCharsets.UTF_8);
 
+    public final int code;
+    public final Optional<String> dotNetName;
+    public final Optional<String> comment;
+    public final Optional<Charset> charset;
+
     CodePage(int code, String dotNetName, String comment) {
+        this.code = code;
+        this.dotNetName = dotNetName==null
+            ? Optional.empty()
+            : dotNetName.length()==0
+            ? Optional.empty()
+            : Optional.of(dotNetName);
+        this.comment = comment == null
+            ? Optional.empty()
+            : comment.length()==0
+            ? Optional.empty()
+            : Optional.of(comment);
+        this.charset = Optional.empty();
     }
 
     CodePage(int code, String dotNetName, String comment, Charset javaCharset) {
+        this.code = code;
+        this.dotNetName = dotNetName==null
+            ? Optional.empty()
+            : dotNetName.length()==0
+            ? Optional.empty()
+            : Optional.of(dotNetName);
+        this.comment = comment == null
+            ? Optional.empty()
+            : comment.length()==0
+            ? Optional.empty()
+            : Optional.of(comment);
+        this.charset = javaCharset==null
+            ? Optional.empty()
+            : Optional.of(javaCharset);
     }
 
     CodePage(int code, String comment) {
+        this.code = code;
+        this.dotNetName = Optional.empty();
+        this.comment = comment == null
+            ? Optional.empty()
+            : comment.length()==0
+            ? Optional.empty()
+            : Optional.of(comment);
+        this.charset = Optional.empty();
     }
 
     CodePage(int code, String comment, Charset javaCharset) {
+        this.code = code;
+        this.dotNetName = Optional.empty();
+        this.comment = comment == null
+            ? Optional.empty()
+            : comment.length()==0
+            ? Optional.empty()
+            : Optional.of(comment);
+        this.charset = javaCharset==null
+            ? Optional.empty()
+            : Optional.of(javaCharset);
     }
 }

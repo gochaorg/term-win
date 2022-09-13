@@ -2,15 +2,22 @@ package xyz.cofe.term.win.test;
 
 import groovy.console.ui.Console;
 import groovy.lang.Closure;
+import xyz.cofe.io.fn.IOFun;
 import xyz.cofe.term.win.WinConsole;
+import xyz.cofe.text.Text;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 public class MainFrame extends JFrame {
     public MainFrame() throws HeadlessException {
@@ -70,6 +77,9 @@ public class MainFrame extends JFrame {
     private void showGroovyConsole(){
         var cons = groovyConsole();
         windowOf(cons.getToolbar()).ifPresent( wnd -> {
+            if( wnd instanceof JFrame ){
+                ((JFrame) wnd).setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            }
             wnd.setVisible(true);
             wnd.toFront();
         });
@@ -82,9 +92,9 @@ public class MainFrame extends JFrame {
         cons.getInputArea().setText(code);
     }
 
-    private Optional<JWindow> windowOf(java.awt.Component cmpt){
+    private Optional<Window> windowOf(java.awt.Component cmpt){
         if( cmpt==null )return Optional.empty();
-        if( cmpt instanceof JWindow )return Optional.of((JWindow) cmpt);
+        if( cmpt instanceof Window )return Optional.of((Window) cmpt);
 
         var prnt = cmpt.getParent();
         if( prnt == null )return Optional.empty();
@@ -144,6 +154,11 @@ public class MainFrame extends JFrame {
             })
             .menu("Groovy", mb -> {
                 mb.action("show", this::showGroovyConsole);
+                if( Samples.samples().size()>0 ){
+                    mb.menu("samples", sampleMenuBuilder -> {
+                        Samples.samples().forEach(sampleMenuBuilder::script);
+                    });
+                }
             })
         ;
     }

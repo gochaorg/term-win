@@ -1,6 +1,7 @@
 package xyz.cofe.term.win;
 
 import com.sun.jna.Native;
+import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32Util;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
@@ -8,7 +9,9 @@ import com.sun.jna.platform.win32.Wincon;
 import com.sun.jna.ptr.IntByReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static xyz.cofe.term.win.WinConsoleError.throwError;
 
@@ -213,7 +216,9 @@ public class WinConsole {
         if( text.length()<1 )return 0;
 
         var written = new IntByReference();
-        if( !rawAPI().WriteConsoleW(outputHandle, text, text.length(), written, new WinDef.LPVOID()) ){
+
+        var wtext = new WString(text);
+        if( !rawAPI().WriteConsoleW(outputHandle, new WString(text), text.length(), written, new WinDef.LPVOID()) ){
             throwError("WriteConsoleW("+text+","+text.length()+",written,LPVOID)");
         }
 
@@ -228,4 +233,44 @@ public class WinConsole {
             throwError("SetConsoleCursorPosition(outputHandle,pos)");
         }
     }
+
+    public synchronized CursorInfo getCursorInfo(){
+        var info = new WinConsoleRawAPI.CURSOR_INFO();
+        if( !rawAPI().GetConsoleCursorInfo(outputHandle,info) ){
+            throwError("GetConsoleCursorInfo(outputHandle,info)");
+        }
+
+        return new CursorInfo( info.size, info.visible );
+    }
+
+    public synchronized void setCursorInfo( CursorInfo cursorInfo ){
+        if( cursorInfo==null )throw new IllegalArgumentException("cursorInfo==null");
+
+        var info = new WinConsoleRawAPI.CURSOR_INFO();
+        info.size = cursorInfo.getSize();
+        info.visible = cursorInfo.isVisible();
+        if( !rawAPI().SetConsoleCursorInfo(outputHandle, info) ){
+            throwError("SetConsoleCursorInfo(outputHandle, info)");
+        }
+    }
+
+    public synchronized Optional<CodePage> getCodePageInput(){
+        int code = rawAPI().GetConsoleCP();
+        if( code==0 ){
+            throwError("GetConsoleCP");
+        }
+        return Arrays.stream(CodePage.values()).sequential().filter( cp -> cp.code == code).findFirst();
+    }
+
+    public synchronized Optional<CodePage> getCodePageOutput(){
+        int code = rawAPI().GetConsoleOutputCP();
+        if( code==0 ){
+            throwError("GetConsoleOutputCP");
+        }
+        return Arrays.stream(CodePage.values()).sequential().filter( cp -> cp.code == code).findFirst();
+    }
+
+//    public synchronized void setCodePageInput(CodePage codePage){
+//        //if( codePage==null )
+//    }
 }
