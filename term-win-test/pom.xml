@@ -23,6 +23,12 @@
             <artifactId>term-win</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>4.0.5</version>
+            <type>pom</type>
+        </dependency>
     </dependencies>
 
 </project>

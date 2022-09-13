@@ -1,11 +1,16 @@
 package xyz.cofe.term.win.test;
 
+import groovy.console.ui.Console;
+import groovy.lang.Closure;
 import xyz.cofe.term.win.WinConsole;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 public class MainFrame extends JFrame {
     public MainFrame() throws HeadlessException {
@@ -22,6 +27,70 @@ public class MainFrame extends JFrame {
     private final WinConsole winConsole = new WinConsole();
 
     private boolean autoScroll = true;
+
+    private Console _groovyConsole;
+    private Console groovyConsole(){
+        if( _groovyConsole!=null )return _groovyConsole;
+        synchronized (this){
+            if( _groovyConsole!=null )return _groovyConsole;
+            _groovyConsole = new Console();
+            _groovyConsole.setVariable("con", winConsole);
+            var logFn = new Closure(this,this){
+                @Override
+                public Object call() {
+                    return null;
+                }
+
+                @Override
+                public Object call(Object... args) {
+                    logs(Arrays.toString(args));
+                    return null;
+                }
+
+                @Override
+                public Object call(Object arguments) {
+                    if( arguments instanceof Iterable ){
+                        StringBuilder sb = new StringBuilder();
+                        for( var e : (Iterable)arguments ){
+                            sb.append(e!=null ? e.toString():"null");
+                        }
+                        logs(sb.toString());
+                    } else {
+                        logs(arguments==null ? "null" : arguments.toString());
+                    }
+                    return null;
+                }
+            };
+            _groovyConsole.setVariable("logs",logFn);
+            _groovyConsole.run();
+            return _groovyConsole;
+        }
+    }
+
+    private void showGroovyConsole(){
+        var cons = groovyConsole();
+        windowOf(cons.getToolbar()).ifPresent( wnd -> {
+            wnd.setVisible(true);
+            wnd.toFront();
+        });
+    }
+
+    private void showSampleGroovy(String code){
+        if( code==null )throw new IllegalArgumentException("code==null");
+        showGroovyConsole();
+        var cons = groovyConsole();
+        cons.getInputArea().setText(code);
+    }
+
+    private Optional<JWindow> windowOf(java.awt.Component cmpt){
+        if( cmpt==null )return Optional.empty();
+        if( cmpt instanceof JWindow )return Optional.of((JWindow) cmpt);
+
+        var prnt = cmpt.getParent();
+        if( prnt == null )return Optional.empty();
+
+        return windowOf(prnt);
+    }
 
     private void init(){
         JMenuBar menuBar = new JMenuBar();
@@ -55,32 +124,85 @@ public class MainFrame extends JFrame {
             logTextPane.setText("");
         });
 
-        var screenBuff = new JMenu("ScreenBuffer");
-        menuBar.add(screenBuff);
-
-        var screenBuffInfo = new JMenuItem("Screen buffer info");
-        screenBuff.add(screenBuffInfo);
-        screenBuffInfo.addActionListener(ev -> {
-            try {
-                logs(winConsole.getScreenBufferInfo().toString());
-            } catch (Throwable err){
-                logs(err.toString());
-            }
-        });
-
-        var consoleMode = new JMenu("ConsoleMode");
-        menuBar.add(consoleMode);
-
-        var consoleModeRead = new JMenuItem("info");
-        consoleMode.add(consoleModeRead);
-        consoleModeRead.addActionListener(ev -> {
-            try {
-                logs(winConsole.getConsoleMode().toString());
-            } catch (Throwable err){
-                logs(err.toString());
-            }
-        });
+        menu(menuBar)
+            .menu("ScreenBuffer", sb ->
+                sb.action("info", ()->{
+                    try {
+                        logs(winConsole.getScreenBufferInfo().toString());
+                    } catch (Throwable err){
+                        logs(err.toString());
+                    }})
+            )
+            .menu("ConsoleMode", mb -> {
+                mb.action("info", ()->{
+                    try {
+                        logs(winConsole.getConsoleMode().toString());
+                    } catch (Throwable err){
+                        logs(err.toString());
+                    }
+                });
+            })
+            .menu("Groovy", mb -> {
+                mb.action("show", this::showGroovyConsole);
+            })
+        ;
     }
+
+    //region MenuBuilder
+    private MenuBuilder menu(JMenu menu){
+        return new MenuBuilder(menu);
+    }
+
+    private MenuBarBuilder menu(JMenuBar menuBar){
+        return new MenuBarBuilder(menuBar);
+    }
+
+    private class MenuBarBuilder {
+        public final JMenuBar menuBar;
+        public MenuBarBuilder(JMenuBar bar){
+            menuBar = bar;
+        }
+
+        public MenuBarBuilder menu(String name, Consumer<MenuBuilder> builder) {
+            JMenu menu = new JMenu(name);
+            menuBar.add(menu);
+            builder.accept(new MenuBuilder(menu));
+            return this;
+        }
+    }
+
+    private class MenuBuilder {
+        public final JMenu menu;
+        public MenuBuilder(JMenu menu){
+            this.menu = menu;
+        }
+
+        public MenuBuilder action(String name, Runnable code){
+            var mi = new JMenuItem(name);
+            menu.add(mi);
+            mi.addActionListener(ev -> {
+                code.run();
+            });
+            return this;
+        }
+
+        public MenuBuilder script(String name, String code){
+            var mi = new JMenuItem(name);
+            menu.add(mi);
+            mi.addActionListener(ev -> {
+                showSampleGroovy(code);
+            });
+            return this;
+        }
+
+        public MenuBuilder menu(String name, Consumer<MenuBuilder> builder){
+            var m = new JMenu(name);
+            menu.add(m);
+            builder.accept(new MenuBuilder(m));
+            return this;
+        }
+    }
+    //endregion
 
     private final Timer timer = new Timer(500,ev -> {
         pollMessageQueue();
