@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@SuppressWarnings("ConstantConditions")
 public class StringUtils {
     public static String join(String delim, Iterable<String> values){
         if( delim==null )throw new IllegalArgumentException("delim");
@@ -29,6 +30,7 @@ public class StringUtils {
                 ? a+(b!=null && b.length()>0 ? delim+b
                 : "") : b).orElse("");
     }
+    @SafeVarargs
     public static <A> String join(String delim, Function<A,String> toString, A ... values){
         if( delim==null )throw new IllegalArgumentException("delim");
         if( values==null )throw new IllegalArgumentException("values");

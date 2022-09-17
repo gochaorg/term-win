@@ -26,6 +26,6 @@ public enum CharAttributesFlags implements BitFlag {
 
     @Override
     public int bitFlag() {
-        return 0;
+        return bitFlag;
     }
 }

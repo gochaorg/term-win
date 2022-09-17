@@ -22,6 +22,8 @@ public class WinConsoleInput {
         this.inputHandle = inputHandle;
     }
 
+    public WinNT.HANDLE getHandle(){ return inputHandle; }
+
     //region availableInputEventsCount
     public int getAvailableInputEventsCount(){
         var cnt = new IntByReference();

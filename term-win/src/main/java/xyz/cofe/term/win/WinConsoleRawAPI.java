@@ -54,5 +54,10 @@ public interface WinConsoleRawAPI extends Kernel32, Wincon {
         boolean handle(int fdwCtrlType);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean SetConsoleCtrlHandler(ConsoleCtrlHandler handler, boolean add);
+
+    public boolean SetConsoleScreenBufferSize(HANDLE outputHandle, COORDbyValue size);
+
+    public boolean SetConsoleWindowInfo(HANDLE outputHandle, boolean absolute, SMALL_RECT rect);
 }

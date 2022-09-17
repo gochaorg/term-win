@@ -4,6 +4,7 @@ import groovy.console.ui.Console;
 import groovy.lang.Closure;
 import xyz.cofe.io.fn.IOFun;
 import xyz.cofe.term.win.WinConsole;
+import xyz.cofe.term.win.WinConsoleOutput;
 import xyz.cofe.text.Text;
 
 import javax.swing.*;
@@ -16,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -134,24 +137,64 @@ public class MainFrame extends JFrame {
             logTextPane.setText("");
         });
 
+        BiConsumer<MenuBuilder, WinConsoleOutput> outputMenu = (outMenuBld, cons) -> {
+            outMenuBld.action("screenBufferInfo", ()->{
+                try {
+                    logs(cons.getScreenBufferInfo().toString());
+                } catch (Throwable err){
+                    logs(err.toString());
+                }
+            }).action("mode", ()->{
+                try {
+                    logs(cons.getScreenBufferMode().toString());
+                } catch (Throwable err){
+                    logs(err.toString());
+                }
+            }).action("attributes",()->{
+                try {
+                    logs(cons.getCharAttributes().toString());
+                } catch (Throwable err){
+                    logs(err.toString());
+                }
+            }).action("codePage",()->{
+                try {
+                    logs(cons.getCodePageOptional().toString());
+                } catch (Throwable err){
+                    logs(err.toString());
+                }
+            }).action("cursorInfo",()->{
+                try {
+                    logs(cons.getCursorInfo().toString());
+                } catch (Throwable err){
+                    logs(err.toString());
+                }
+            });
+        };
+
         menu(menuBar)
-            .menu("ScreenBuffer", sb ->
-                sb.action("info", ()->{
-                    try {
-                        logs(winConsole.getScreenBufferInfo().toString());
-                    } catch (Throwable err){
-                        logs(err.toString());
-                    }})
+            .menu("WinConsole", sb ->
+                sb.menu("output", outMenuBld -> {
+                    outputMenu.accept(outMenuBld, winConsole.getOutput());
+                })
+                .menu("error", outMenuBld -> {
+                    outputMenu.accept(outMenuBld, winConsole.getErrput());
+                })
+                .menu("input", menuBld -> {
+                    menuBld.action("codePage", ()->{
+                        try {
+                            logs(winConsole.getInput().getCodePageOptional().toString());
+                        } catch (Throwable err){
+                            logs(err.toString());
+                        }
+                    }).action("mode", ()->{
+                        try{
+                            logs(winConsole.getInput().getInputMode().toString());
+                        }catch (Throwable err){
+                            logs(err.toString());
+                        }
+                    });
+                })
             )
-            .menu("ConsoleMode", mb -> {
-                mb.action("info", ()->{
-                    try {
-                        logs(winConsole.getConsoleMode().toString());
-                    } catch (Throwable err){
-                        logs(err.toString());
-                    }
-                });
-            })
             .menu("Groovy", mb -> {
                 mb.action("show", this::showGroovyConsole);
                 if( Samples.samples().size()>0 ){
@@ -227,7 +270,7 @@ public class MainFrame extends JFrame {
 
     private void readConsoleInput(){
         try {
-            winConsole.readInput().forEach(inputEvent -> {
+            winConsole.read().forEach(inputEvent -> {
                 log(inputEvent.toString() + "\n");
             });
         } catch (Throwable err){

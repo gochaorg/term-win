@@ -48,6 +48,8 @@ public class WinConsoleOutput implements AutoCloseable {
         }
     }
 
+    public WinNT.HANDLE getHandle(){ return outputHandle; }
+
     //region screenBufferMode
     public ScreenBufferMode getScreenBufferMode(){
         if( released )throw new IllegalStateException("closed");
@@ -59,12 +61,12 @@ public class WinConsoleOutput implements AutoCloseable {
         return new ScreenBufferMode(outputMode.getValue());
     }
 
-    public void setScreenBufferMode(ConsoleMode mode){
+    public void setScreenBufferMode(ScreenBufferMode mode){
         if( mode==null )throw new IllegalArgumentException("mode==null");
         if( released )throw new IllegalStateException("closed");
 
-        if (!rawAPI().SetConsoleMode(outputHandle, mode.getOutputFlags())) {
-            throwError("SetConsoleMode(outputHandle," + mode.getOutputFlags() + ")");
+        if (!rawAPI().SetConsoleMode(outputHandle, mode.getScreenBufferFlags())) {
+            throwError("SetConsoleMode(outputHandle," + mode.getScreenBufferFlags() + ")");
         }
     }
     //endregion
@@ -173,5 +175,41 @@ public class WinConsoleOutput implements AutoCloseable {
         }
 
         return new LargestSize(size.X, size.Y);
+    }
+
+    public void bufferSize(int width,int height){
+        if( released )throw new IllegalStateException("closed");
+        if( width<0 )throw new IllegalArgumentException("width<0");
+        if( height<0 )throw new IllegalArgumentException("height<0");
+        if( width>Short.MAX_VALUE )throw new IllegalArgumentException("width>Short.MAX_VALUE");
+        if( height>Short.MAX_VALUE )throw new IllegalArgumentException("height>Short.MAX_VALUE");
+
+        var size = new WinConsoleRawAPI.COORDbyValue();
+        size.X = (short)width;
+        size.Y = (short)height;
+
+        if( !rawAPI().SetConsoleScreenBufferSize(outputHandle, size) ){
+            throwError("SetConsoleScreenBufferSize(outputHandle, size)");
+        }
+    }
+
+    public void windowRect(int left, int top, int right, int bottom){
+        if( released )throw new IllegalStateException("closed");
+        if( left<0 )throw new IllegalArgumentException("left<0");
+        if( top<0 )throw new IllegalArgumentException("top<0");
+        if( right<left )throw new IllegalArgumentException("right<left");
+        if( bottom<top )throw new IllegalArgumentException("bottom<top");
+        if( right>Short.MAX_VALUE )throw new IllegalArgumentException("right>Short.MAX_VALUE");
+        if( bottom>Short.MAX_VALUE )throw new IllegalArgumentException("bottom>Short.MAX_VALUE");
+
+        Wincon.SMALL_RECT rect = new Wincon.SMALL_RECT();
+        rect.Left = (short) left;
+        rect.Top = (short) top;
+        rect.Right = (short) right;
+        rect.Bottom = (short) bottom;
+
+        if( !rawAPI().SetConsoleWindowInfo(outputHandle, true, rect) ){
+            throwError("SetConsoleWindowInfo(outputHandle, true, rect)");
+        }
     }
 }

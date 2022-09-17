@@ -1,5 +1,7 @@
 package xyz.cofe.term.win;
 
+import static xyz.cofe.term.win.impl.StringUtils.join;
+
 public class InputMode {
     private final int inputFlags;
     public int getInputFlags(){ return inputFlags; }
@@ -8,12 +10,12 @@ public class InputMode {
         this.inputFlags = inputFlags;
     }
 
-    //region ENABLE_ECHO_INPUT
+    //region echo : boolean - ENABLE_ECHO_INPUT
     /**
      * read flag {@link InputModeFlags#ENABLE_ECHO_INPUT}
      * @return value
      */
-    public boolean isInputEcho(){
+    public boolean isEcho(){
         return InputModeFlags.ENABLE_ECHO_INPUT.has(inputFlags);
     }
 
@@ -22,16 +24,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputEcho(boolean switchOn){
+    public InputMode echo(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_ECHO_INPUT.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_INSERT_MODE
+    //region insert : boolean - ENABLE_INSERT_MODE
     /**
      * read flag {@link InputModeFlags#ENABLE_INSERT_MODE}
      * @return value
      */
-    public boolean isInputInsert(){
+    public boolean isInsert(){
         return InputModeFlags.ENABLE_INSERT_MODE.has(inputFlags);
     }
 
@@ -40,16 +42,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputInsert(boolean switchOn){
+    public InputMode insert(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_INSERT_MODE.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_LINE_INPUT
+    //region line : boolean - ENABLE_LINE_INPUT
     /**
      * read flag {@link InputModeFlags#ENABLE_LINE_INPUT}
      * @return value
      */
-    public boolean isInputLine(){
+    public boolean isLine(){
         return InputModeFlags.ENABLE_LINE_INPUT.has(inputFlags);
     }
 
@@ -58,16 +60,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputLine(boolean switchOn){
+    public InputMode line(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_LINE_INPUT.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_MOUSE_INPUT
+    //region mouse : boolean - ENABLE_MOUSE_INPUT
     /**
      * read flag {@link InputModeFlags#ENABLE_MOUSE_INPUT}
      * @return value
      */
-    public boolean isInputMouse(){
+    public boolean isMouse(){
         return InputModeFlags.ENABLE_MOUSE_INPUT.has(inputFlags);
     }
 
@@ -76,16 +78,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputMouse(boolean switchOn){
+    public InputMode mouse(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_MOUSE_INPUT.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_PROCESSED_INPUT
+    //region processing : boolean - ENABLE_PROCESSED_INPUT
     /**
      * read flag {@link InputModeFlags#ENABLE_PROCESSED_INPUT}
      * @return value
      */
-    public boolean isInputProcessing(){
+    public boolean isProcessing(){
         return InputModeFlags.ENABLE_PROCESSED_INPUT.has(inputFlags);
     }
 
@@ -94,16 +96,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputProcessing(boolean switchOn){
+    public InputMode processing(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_PROCESSED_INPUT.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_QUICK_EDIT_MODE
+    //region quickEdit : boolean - ENABLE_QUICK_EDIT_MODE
     /**
      * read flag {@link InputModeFlags#ENABLE_QUICK_EDIT_MODE}
      * @return value
      */
-    public boolean isInputQuickEdit(){
+    public boolean isQuickEdit(){
         return InputModeFlags.ENABLE_QUICK_EDIT_MODE.has(inputFlags);
     }
 
@@ -112,16 +114,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputQuickEdit(boolean switchOn){
+    public InputMode quickEdit(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_QUICK_EDIT_MODE.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_WINDOW_INPUT
+    //region window : boolean - ENABLE_WINDOW_INPUT
     /**
      * read flag {@link InputModeFlags#ENABLE_WINDOW_INPUT}
      * @return value
      */
-    public boolean isInputWindow(){
+    public boolean isWindow(){
         return InputModeFlags.ENABLE_WINDOW_INPUT.has(inputFlags);
     }
 
@@ -130,16 +132,16 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputWindow(boolean switchOn){
+    public InputMode window(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_WINDOW_INPUT.update(inputFlags,switchOn));
     }
     //endregion
-    //region ENABLE_VIRTUAL_TERMINAL_INPUT
+    //region virtualTerminal : boolean - ENABLE_VIRTUAL_TERMINAL_INPUT
     /**
      * read flag {@link InputModeFlags#ENABLE_VIRTUAL_TERMINAL_INPUT}
      * @return value
      */
-    public boolean isInputVirtualTerminal(){
+    public boolean isVirtualTerminal(){
         return InputModeFlags.ENABLE_VIRTUAL_TERMINAL_INPUT.has(inputFlags);
     }
 
@@ -148,9 +150,21 @@ public class InputMode {
      * @param switchOn value
      * @return new mode with switched flag
      */
-    public InputMode inputVirtualTerminal(boolean switchOn){
+    public InputMode virtualTerminal(boolean switchOn){
         return new InputMode(InputModeFlags.ENABLE_VIRTUAL_TERMINAL_INPUT.update(inputFlags,switchOn));
     }
     //endregion
 
+    public String toString(){
+        return "InputMode{"+join(",",
+            isEcho() ? "Echo" : "",
+            isInsert() ? "Insert" : "",
+            isLine() ? "Line" : "",
+            isMouse() ? "Mouse" : "",
+            isProcessing() ? "Processing" : "",
+            isQuickEdit() ? "QuickEdit" : "",
+            isWindow() ? "Window" : "",
+            isVirtualTerminal() ? "VirtualTerminal" : ""
+            )+"}";
+    }
 }

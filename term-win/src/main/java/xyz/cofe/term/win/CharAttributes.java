@@ -9,6 +9,9 @@ public class CharAttributes {
     }
 
     public int getFlags(){ return flags; }
+    public CharAttributes flags(int flags){
+        return new CharAttributes(flags);
+    }
 
     public boolean isFgBlue(){ return CharAttributesFlags.FOREGROUND_BLUE.has(flags); }
     public CharAttributes fgBlue(boolean switchOn){ return new CharAttributes(CharAttributesFlags.FOREGROUND_BLUE.update(flags, switchOn)); }
@@ -57,9 +60,9 @@ public class CharAttributes {
 
     private static String toString(CharAttributes attributes){
         if( attributes==null )throw new IllegalArgumentException("attributes==null");
-        return StringUtils.join(
+        return "CharAttributes{"+StringUtils.join(
             ",",
-            s -> s,
+            "flags="+attributes.flags,
             attributes.isFgBlue() ? "FgBlue" : "",
             attributes.isFgGreen() ? "FgGreen" : "",
             attributes.isFgRed() ? "FgRed" : "",
@@ -75,7 +78,7 @@ public class CharAttributes {
             attributes.isLVBGridRVertical() ? "LVBGridRVertical" : "",
             attributes.isLVBReverseVideo() ? "LVBReverseVideo" : "",
             attributes.isLVBUnderscore() ? "LVBUnderscore" : ""
-        );
+        )+"}";
     }
 
     public String toString(){

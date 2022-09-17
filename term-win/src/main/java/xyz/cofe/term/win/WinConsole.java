@@ -1,15 +1,8 @@
 package xyz.cofe.term.win;
 
-import com.sun.jna.Native;
-import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32Util;
-import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
-import com.sun.jna.platform.win32.Wincon;
-import com.sun.jna.ptr.IntByReference;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,9 +58,12 @@ public class WinConsole {
     private static volatile boolean allocated;
 
     private final WinNT.HANDLE outputHandle;
+    private final WinConsoleOutput output;
     private final WinNT.HANDLE inputHandle;
-    private final WinNT.HANDLE errorHandle;
+    private final WinConsoleInput input;
 
+    private final WinNT.HANDLE errorHandle;
+    private final WinConsoleOutput errput;
 
     public WinConsole(){
         synchronized (WinConsole.class){
@@ -85,8 +81,139 @@ public class WinConsole {
                 }));
             }
         }
+
         outputHandle = getStdOutputHandle();
+        output = new WinConsoleOutput(outputHandle);
+
         inputHandle = getStdInputHandle();
+        input = new WinConsoleInput(inputHandle);
+
         errorHandle = getStdErrorHandle();
+        errput = new WinConsoleOutput(errorHandle);
+    }
+
+    public WinConsoleOutput getOutput(){ return output; }
+    public WinConsoleOutput getErrput(){ return errput; }
+    public WinConsoleInput getInput(){ return input; }
+
+    //region availableInputEventsCount : int
+    public int getAvailableInputEventsCount() {
+        return input.getAvailableInputEventsCount();
+    }
+    //endregion
+    //region inputMode : InputMode
+    public InputMode getInputMode() {
+        return input.getInputMode();
+    }
+
+    public void setInputMode(InputMode mode) {
+        input.setInputMode(mode);
+    }
+    //endregion
+    //region inputCodePage : CodePage
+    public Optional<CodePage> getInputCodePageOptional() {
+        return input.getCodePageOptional();
+    }
+
+    public void setInputCodePage(CodePage codePage) {
+        input.setCodePage(codePage);
+    }
+    //endregion
+    //region read(eventCount):List<InputEvent>
+    public List<InputEvent> read(int eventCount) {
+        return input.read(eventCount);
+    }
+    //endregion
+    //region read():List<InputEvent>
+    public List<InputEvent> read() {
+        return input.read();
+    }
+    //endregion
+    //region peek(eventCount):List<InputEvent>
+    public List<InputEvent> peek(int eventCount) {
+        return input.peek(eventCount);
+    }
+    //endregion
+    //region flush()
+    public void flushInput() {
+        input.flush();
+    }
+    //endregion
+
+    //region screenBufferMode : ScreenBufferMode
+    public ScreenBufferMode getScreenBufferMode() {
+        return output.getScreenBufferMode();
+    }
+
+    public void setScreenBufferMode(ScreenBufferMode mode) {
+        output.setScreenBufferMode(mode);
+    }
+    //endregion
+    //region outputCodePage : CodePage
+    public Optional<CodePage> getOutputCodePageOptional() {
+        return output.getCodePageOptional();
+    }
+
+    public void setOutputCodePage(CodePage codePage) {
+        output.setCodePage(codePage);
+    }
+    //endregion
+    //region cursorInfo : CursorInfo
+    public CursorInfo getCursorInfo() {
+        return output.getCursorInfo();
+    }
+
+    public void setCursorInfo(CursorInfo cursorInfo) {
+        output.setCursorInfo(cursorInfo);
+    }
+    //endregion
+
+    //region screenBufferInfo : ScreenBufferInfo
+    public ScreenBufferInfo getScreenBufferInfo() {
+        return output.getScreenBufferInfo();
+    }
+    //endregion
+    //region charAttributes : CharAttributes
+    public CharAttributes getCharAttributes() {
+        return output.getCharAttributes();
+    }
+
+    public void setCharAttributes(CharAttributes attributes) {
+        if( attributes==null )throw new IllegalArgumentException("attributes==null");
+        output.setCharAttributes(attributes);
+    }
+    //endregion
+
+    public int write(String text) {
+        if( text==null )throw new IllegalArgumentException("text==null");
+        return output.write(text);
+    }
+
+    public void cursor(int x, int y) {
+        output.cursor(x, y);
+    }
+
+    //region largestSize : LargestSize
+    public LargestSize getLargestSize() {
+        return output.getLargestSize();
+    }
+    //endregion
+    //region title : String
+    public String getTitle(){
+        return WinConsoleCommon.getTitle();
+    }
+    public void setTitle(String title){
+        if( title==null )throw new IllegalArgumentException("title==null");
+        WinConsoleCommon.setTitle(title);
+    }
+    //endregion
+
+    public ControlHolder controlHandle(ControlHandler handler){
+        if( handler==null )throw new IllegalArgumentException("handler==null");
+        return WinConsoleCommon.handleControl(handler);
+    }
+
+    public void controlHandleReset(){
+        WinConsoleCommon.restoreControl();
     }
 }
