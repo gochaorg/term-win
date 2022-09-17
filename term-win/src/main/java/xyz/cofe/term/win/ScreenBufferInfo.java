@@ -11,7 +11,6 @@ public class ScreenBufferInfo {
     }
 
     private final int yCursor;
-
     public int getYCursor() {
         return yCursor;
     }
@@ -22,7 +21,6 @@ public class ScreenBufferInfo {
     }
 
     private final int height;
-
     public int getHeight() {
         return height;
     }
@@ -33,10 +31,12 @@ public class ScreenBufferInfo {
     }
 
     private final int heightMax;
-
     public int getHeightMax() {
         return heightMax;
     }
+
+    private final CharAttributes attributes;
+    public CharAttributes getCharAttributes(){ return attributes; }
 
     public ScreenBufferInfo(Wincon.CONSOLE_SCREEN_BUFFER_INFO info){
         if( info==null )throw new IllegalArgumentException("info==null");
@@ -46,6 +46,7 @@ public class ScreenBufferInfo {
         height = info.dwSize.Y;
         widthMax = info.dwMaximumWindowSize.X;
         heightMax = info.dwMaximumWindowSize.Y;
+        attributes = new CharAttributes(info.wAttributes);
     }
 
     public String toString(){
@@ -57,6 +58,7 @@ public class ScreenBufferInfo {
         ls.add("height="+height);
         ls.add("widthMax="+widthMax);
         ls.add("heightMax="+heightMax);
+        ls.add("attributes="+attributes);
 
         sb.append("ScreenBufferInfo{");
         sb.append(ls.stream().reduce("", (a,b)->a.length()>0 ? a+","+(b.length()>0 ? ","+b : "") : b));
