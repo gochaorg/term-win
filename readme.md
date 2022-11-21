@@ -107,3 +107,42 @@ subgraph userIO
   resize[resize window]
 end
 ```
+
+- Окно window terminal на уровне win 32 api не различает render для std output и std error
+- Курсор где выводиться текст - общий для std output / std error
+
+Скроллинг окна
+------------------------
+
+    WinConsole {
+      ScreenBufferInfo getScreenBufferInfo()
+      ...
+    }
+
+    ScreenBufferInfo {
+      int getXCursor()
+      int getYCursor()
+      int getWidth()
+      int getHeight()
+      int getWidthMax()
+      int getHeightMax()
+      ...
+    }
+
+![](doc/img/rect235.png)
+
+Чтение данных
+---------------------
+
+```java
+console.input.read().forEach( event -> {
+  if( event instanceOf InputKeyEvent ){
+    // .... key board event
+  }else if( event instanceOf InputMouseEvent ){
+    // ....
+  }else if( event instanceOf InputWindowEvent ){
+    // ....
+  }
+});
+```
+
