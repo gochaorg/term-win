@@ -9,7 +9,34 @@ import java.util.Optional;
 import static xyz.cofe.term.win.WinConsoleError.throwError;
 import static xyz.cofe.term.win.impl.RawAPIHolder.rawAPI;
 
-// https://docs.microsoft.com/en-us/windows/console/using-the-high-level-input-and-output-functions
+/**
+ * Представляет набор функций для работы с консолью
+ *
+ * <p>
+ * Основаня документация по функцию консоли есть по этой
+ * <a href="https://docs.microsoft.com/en-us/windows/console/using-the-high-level-input-and-output-functions">ссылке</a>
+ * на docs.microsoft.com
+ *
+ * <h2>Запуск консольного приложения</h2>
+ *
+ * Что бы использовать данный класс, java приложение следует запустить с использованием javaw.exe.
+ * В обычном использовании java.exe консольнуые функции не доступны по причине архитекуры ОС.
+ *
+ * <p>
+ * При первом создании экземпляра WinConsole, будет создана консоль {@code rawAPI().AllocConsole()} ({@link WinConsoleRawAPI#AllocConsole()})
+ *
+ * <br>
+ * Когда JVM будет завершать работу ({@code Runtime.getRuntime().addShutdownHook}), консоль будет освобождена {@link WinConsoleRawAPI#FreeConsole()}
+ *
+ * <h2>Ввод-вывод</h2>
+ *
+ * С консолью связаны обычно 3 стандарных канала
+ * <ul>
+ *     <li>stdOutputHandle : {@link WinNT.HANDLE} - std output, канал вывода обычной информации в файл/терминал</li>
+ *     <li>stdErrorHandle : {@link WinNT.HANDLE} -  std errput, канал вывода ошибок информации в файл/терминал</li>
+ *     <li>stdInputHandle : {@link WinNT.HANDLE} -  std input,  канал ввода из файла/клавиатуры/.... </li>
+ * </ul>
+ */
 public class WinConsole {
     //region stdOutputHandle, stdInputHandle, stdErrorHandle
     private static volatile WinNT.HANDLE stdOutputHandle;
