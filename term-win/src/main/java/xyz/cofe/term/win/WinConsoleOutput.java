@@ -166,6 +166,25 @@ public class WinConsoleOutput implements AutoCloseable {
         }
     }
 
+    /**
+     * Retrieves the size of the largest possible console window, based on the current font and the size of the display.
+     *
+     * <p>
+     * The function does not take into consideration the size of the console screen buffer,
+     * which means that the window size returned may be larger than the size of the console screen buffer.
+     * The GetConsoleScreenBufferInfo function can be used to determine the maximum size of the console window,
+     * given the current screen buffer size, the current font, and the display size.
+     *
+     * <p>
+     * Получает размер максимально возможного окна консоли на основе текущего шрифта и размера экрана.
+     *
+     * <p>
+     * Функция не учитывает размер экранного буфера консоли, а это означает,
+     * что возвращаемый размер окна может быть больше, чем размер экранного буфера консоли.
+     * Функцию GetConsoleScreenBufferInfo можно использовать для определения максимального размера
+     * окна консоли с учетом текущего размера экранного буфера, текущего шрифта и размера экрана.
+     * @return size
+     */
     public LargestSize getLargestSize(){
         if( released )throw new IllegalStateException("closed");
 

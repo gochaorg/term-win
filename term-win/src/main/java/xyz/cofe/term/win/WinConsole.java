@@ -243,59 +243,131 @@ public class WinConsole {
     //endregion
 
     //region screenBufferMode : ScreenBufferMode
+
+    /**
+     * Возвращает режим работы вывода (output/error output)
+     * @return режим вывода информации
+     */
     public ScreenBufferMode getScreenBufferMode() {
         return output.getScreenBufferMode();
     }
 
+    /**
+     * Указывает режим работы вывода (output/error output)
+     * @param mode режим вывода информации
+     */
     public void setScreenBufferMode(ScreenBufferMode mode) {
         output.setScreenBufferMode(mode);
     }
     //endregion
     //region outputCodePage : CodePage
+
+    /**
+     * Возвращает кодовую страницу output
+     * @return кодовая страница
+     */
     public Optional<CodePage> getOutputCodePageOptional() {
         return output.getCodePageOptional();
     }
 
+    /**
+     * Указывает кодовую страницу output
+     * @param codePage кодовая страница
+     */
     public void setOutputCodePage(CodePage codePage) {
         output.setCodePage(codePage);
     }
     //endregion
     //region cursorInfo : CursorInfo
+
+    /**
+     * Возвращает видимость и размер курсора
+     * @return видимость и размер курсора
+     */
     public CursorInfo getCursorInfo() {
         return output.getCursorInfo();
     }
 
+    /**
+     * Указывает видимость и размер курсора
+     * @param cursorInfo видимость и размер курсора
+     */
     public void setCursorInfo(CursorInfo cursorInfo) {
         output.setCursorInfo(cursorInfo);
     }
     //endregion
 
     //region screenBufferInfo : ScreenBufferInfo
+
+    /**
+     * Возвращает информацию о размере и расположение вывода информации
+     * @return информация о размере и расположении вывода информации
+     */
     public ScreenBufferInfo getScreenBufferInfo() {
         return output.getScreenBufferInfo();
     }
     //endregion
     //region charAttributes : CharAttributes
+
+    /**
+     * Возвращает цвет и другие атрибуты выводимых символов
+     * @return цвет  и другие атрибуты выводимых символов
+     */
     public CharAttributes getCharAttributes() {
         return output.getCharAttributes();
     }
 
+    /**
+     * Указывает цвет и другие атрибуты выводимых символов
+     * @param attributes цвет и другие атрибуты выводимых символов
+     */
     public void setCharAttributes(CharAttributes attributes) {
         if( attributes==null )throw new IllegalArgumentException("attributes==null");
         output.setCharAttributes(attributes);
     }
     //endregion
 
+    /**
+     * Выводит сиволы в озицию курсора и меняет позицию курсора
+     * @param text выводимый текст
+     * @return кол-во записанных символов
+     * @see #setScreenBufferMode(ScreenBufferMode)
+     * @see #cursor(int, int)
+     */
     public int write(String text) {
         if( text==null )throw new IllegalArgumentException("text==null");
         return output.write(text);
     }
 
+    /**
+     * смещает курсор в указанные позицию
+     * @param x позиция курсора
+     * @param y позиция курсора
+     */
     public void cursor(int x, int y) {
         output.cursor(x, y);
     }
 
     //region largestSize : LargestSize
+    /**
+     * Retrieves the size of the largest possible console window, based on the current font and the size of the display.
+     *
+     * <p>
+     * The function does not take into consideration the size of the console screen buffer,
+     * which means that the window size returned may be larger than the size of the console screen buffer.
+     * The GetConsoleScreenBufferInfo function can be used to determine the maximum size of the console window,
+     * given the current screen buffer size, the current font, and the display size.
+     *
+     * <p>
+     * Получает размер максимально возможного окна консоли на основе текущего шрифта и размера экрана.
+     *
+     * <p>
+     * Функция не учитывает размер экранного буфера консоли, а это означает,
+     * что возвращаемый размер окна может быть больше, чем размер экранного буфера консоли.
+     * Функцию GetConsoleScreenBufferInfo можно использовать для определения максимального размера
+     * окна консоли с учетом текущего размера экранного буфера, текущего шрифта и размера экрана.
+     * @return размер
+     */
     public LargestSize getLargestSize() {
         return output.getLargestSize();
     }
@@ -310,6 +382,12 @@ public class WinConsole {
     }
     //endregion
 
+    /**
+     * Добавляет обработчик нажатия CTRL+BREAK, CTRL+C
+     * @param handler обрабочик
+     * @return удаление обработчика
+     * @see WinConsoleCommon#handleControl(ControlHandler)
+     */
     public ControlHolder controlHandle(ControlHandler handler){
         if( handler==null )throw new IllegalArgumentException("handler==null");
         return WinConsoleCommon.handleControl(handler);
