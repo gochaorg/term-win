@@ -40,6 +40,11 @@ import static xyz.cofe.term.win.impl.RawAPIHolder.rawAPI;
 public class WinConsole {
     //region stdOutputHandle, stdInputHandle, stdErrorHandle
     private static volatile WinNT.HANDLE stdOutputHandle;
+
+    /**
+     * Возвращает handle для stdout
+     * @return handle для stdout
+     */
     public static WinNT.HANDLE getStdOutputHandle(){
         if( stdOutputHandle !=null )return stdOutputHandle;
         synchronized (WinConsole.class){
@@ -54,6 +59,11 @@ public class WinConsole {
     }
 
     private static volatile WinNT.HANDLE stdInputHandle;
+
+    /**
+     * Возвращает handle для stdinput
+     * @return handle для stdinput
+     */
     public static WinNT.HANDLE getStdInputHandle(){
         if( stdInputHandle!=null )return stdInputHandle;
         synchronized (WinConsole.class){
@@ -68,6 +78,11 @@ public class WinConsole {
     }
 
     private static volatile WinNT.HANDLE stdErrorHandle;
+
+    /**
+     * Возвращает handle для std error
+     * @return handle для std error
+     */
     public static WinNT.HANDLE getStdErrorHandle(){
         if( stdErrorHandle!=null )return stdErrorHandle;
         synchronized (WinConsole.class){
@@ -119,49 +134,109 @@ public class WinConsole {
         errput = new WinConsoleOutput(errorHandle);
     }
 
+    /**
+     * Консоль для вывода в stdout, в целом можно писать и в stderr - разницы нет
+     * @return консоль вывода в stdout
+     */
+    @Deprecated(since = "будет удалено в следующем major")
     public WinConsoleOutput getOutput(){ return output; }
+
+    /**
+     * Консоль для вывода в stderr, в целом можно писать и в stdout - разницы нет
+     * @return консоль вывода в stdout
+     */
+    @Deprecated(since = "будет удалено в следующем major")
     public WinConsoleOutput getErrput(){ return errput; }
+
+    /**
+     * Консоль для чтения событий ввода
+     * @return чтение событий ввода
+     */
     public WinConsoleInput getInput(){ return input; }
 
     //region availableInputEventsCount : int
+
+    /**
+     * Возвращает кол-во полученных, но не прочетанных событий ввода
+     * @return кол-во событий ввода в буфере
+     */
     public int getAvailableInputEventsCount() {
         return input.getAvailableInputEventsCount();
     }
     //endregion
     //region inputMode : InputMode
+
+    /**
+     * Возвращает режим ввода
+     * @return режим ввода
+     */
     public InputMode getInputMode() {
         return input.getInputMode();
     }
 
+    /**
+     * Указывает режим ввода
+     * @param mode режим ввода
+     */
     public void setInputMode(InputMode mode) {
         input.setInputMode(mode);
     }
     //endregion
     //region inputCodePage : CodePage
+
+    /**
+     * Возвращает текущую кодовую страницу
+     * @return кодовая страница
+     */
     public Optional<CodePage> getInputCodePageOptional() {
         return input.getCodePageOptional();
     }
 
+    /**
+     * Указывает текущую кодовую страницу
+     * @param codePage кодовая страница
+     */
     public void setInputCodePage(CodePage codePage) {
         input.setCodePage(codePage);
     }
     //endregion
     //region read(eventCount):List<InputEvent>
+
+    /**
+     * Читает события из буфера, потенциально - блокируемая операция, лучше предварительно проверить наличие данных через {@link #getAvailableInputEventsCount()}
+     * @param eventCount сколько событий прочесть и удалить из буфера
+     * @return события
+     */
     public List<InputEvent> read(int eventCount) {
         return input.read(eventCount);
     }
     //endregion
     //region read():List<InputEvent>
+
+    /**
+     * Читает события из буфера, потенциально - блокируемая операция, лучше предварительно проверить наличие данных через {@link #getAvailableInputEventsCount()}
+     * @return события
+     */
     public List<InputEvent> read() {
         return input.read();
     }
     //endregion
     //region peek(eventCount):List<InputEvent>
+
+    /**
+     * Читает события из буфера, не удаляя их - блокировать не должно
+     * @param eventCount сколько событий ожидаем
+     * @return события ввода
+     */
     public List<InputEvent> peek(int eventCount) {
         return input.peek(eventCount);
     }
     //endregion
     //region flush()
+
+    /**
+     * Очистить буфер ввода
+     */
     public void flushInput() {
         input.flush();
     }
