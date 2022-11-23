@@ -107,18 +107,19 @@ public class WinConsole {
     private final WinNT.HANDLE errorHandle;
     private final WinConsoleOutput errput;
 
-    public WinConsole(){
-        synchronized (WinConsole.class){
-            if( !allocated ){
-                if( !rawAPI().AllocConsole() ){
-                    throwError("AllocConsole");
-                }
+    public WinConsole(ConnectToConsole connectToConsole){
+        if( connectToConsole==null )throw new IllegalArgumentException("connectToConsole==null");
+
+        synchronized (WinConsole.class) {
+            if (!allocated) {
+                connectToConsole.connect();
                 allocated = true;
-                Runtime.getRuntime().addShutdownHook(new Thread(()->{
-                    if( !rawAPI().FreeConsole() ){
+
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                    if (!rawAPI().FreeConsole()) {
                         var errno = rawAPI().GetLastError();
                         var errmsg = Kernel32Util.getLastErrorMessage();
-                        System.err.println("FreeConsole fail: "+errno+" "+errmsg);
+                        System.err.println("FreeConsole fail: " + errno + " " + errmsg);
                     }
                 }));
             }
@@ -132,6 +133,10 @@ public class WinConsole {
 
         errorHandle = getStdErrorHandle();
         errput = new WinConsoleOutput(errorHandle);
+    }
+
+    public WinConsole(){
+        this(new ConnectToConsole.TryAttachParent());
     }
 
     /**

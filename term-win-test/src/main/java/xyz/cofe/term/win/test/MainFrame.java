@@ -3,6 +3,7 @@ package xyz.cofe.term.win.test;
 import groovy.console.ui.Console;
 import groovy.lang.Closure;
 import xyz.cofe.io.fn.IOFun;
+import xyz.cofe.term.win.ConnectToConsole;
 import xyz.cofe.term.win.WinConsole;
 import xyz.cofe.term.win.WinConsoleOutput;
 import xyz.cofe.text.Text;
@@ -34,7 +35,7 @@ public class MainFrame extends JFrame {
 
     private final JTextPane logTextPane = new JTextPane();
     private final JScrollPane logScrollPane = new JScrollPane(logTextPane);
-    private final WinConsole winConsole = new WinConsole();
+    private final WinConsole winConsole = new WinConsole(new ConnectToConsole.TryAttachParent());
 
     private boolean autoScroll = true;
 
