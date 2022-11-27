@@ -12,8 +12,6 @@
 
     <modules>
         <module>term-win</module>
-        <module>term-win-runner</module>
-        <module>term-win-test</module>
     </modules>
 
     <properties>
