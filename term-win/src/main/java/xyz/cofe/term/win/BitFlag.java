@@ -1,5 +1,8 @@
 package xyz.cofe.term.win;
 
+/**
+ * Поддержка битовых флагов
+ */
 public interface BitFlag {
     public int bitFlag();
     public default boolean has(int flags){

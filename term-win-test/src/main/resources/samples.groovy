@@ -30,3 +30,7 @@ hld = con.controlHandle( ev -> {
     logs( ev.toString() )
     true
 })
+
+//// mouse events /////////////////
+con.setInputMode( con.getInputMode().mouse(true).quickEdit(false) )
+println( con.getInputMode() )
