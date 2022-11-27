@@ -17,11 +17,11 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_ECHO_INPUT}
      *
-     * <р>
+     * <br>
      * Символы, прочитанные функцией ReadFile или ReadConsole,
      * записываются в активный экранный буфер по мере ввода в консоль.
      *
-     * <р>
+     * <br>
      * Этот режим можно использовать, только если также включен режим ENABLE_LINE_INPUT.
      *
      * @return value
@@ -33,11 +33,11 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_ECHO_INPUT}
      *
-     * <р>
+     * <br>
      * Символы, прочитанные функцией ReadFile или ReadConsole,
      * записываются в активный экранный буфер по мере ввода в консоль.
      *
-     * <р>
+     * <br>
      * Этот режим можно использовать, только если также включен режим ENABLE_LINE_INPUT.
      *
      * @param switchOn value
@@ -52,11 +52,11 @@ public class InputMode {
      * read flag {@link InputModeFlags#ENABLE_INSERT_MODE}
      *
      *
-     * <р>
+     * <br>
      * Если этот параметр включен, текст, введенный в окне консоли, будет вставлен в
      * текущее местоположение курсора и весь текст после этого местоположения не будут перезаписаны.
      *
-     * <р>
+     * <br>
      * Когда отключено, весь последующий текст будет перезаписан.
      *
      * @return value
@@ -68,11 +68,11 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_INSERT_MODE}
      *
-     * <р>
+     * <br>
      * Если этот параметр включен, текст, введенный в окне консоли, будет вставлен в
      * текущее местоположение курсора и весь текст после этого местоположения не будут перезаписаны.
      *
-     * <р>
+     * <br>
      * Когда отключено, весь последующий текст будет перезаписан.
      * @param switchOn value
      * @return new mode with switched flag
@@ -85,11 +85,11 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_LINE_INPUT}
      *
-     * <р>
+     * <br>
      * Функция ReadFile или ReadConsole возвращает значение только тогда, когда
      * читается символ возврата каретки.
      *
-     * <р>
+     * <br>
      * Если этот режим отключен, функции возвращаются, когда доступны один или несколько символов.
      *
      * @return value
@@ -101,11 +101,11 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_LINE_INPUT}
      *
-     * <р>
+     * <br>
      * Функция ReadFile или ReadConsole возвращает значение только тогда, когда
      * читается символ возврата каретки.
      *
-     * <р>
+     * <br>
      * Если этот режим отключен, функции возвращаются, когда доступны один или несколько символов.
      * @param switchOn value
      * @return new mode with switched flag
@@ -118,13 +118,13 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_MOUSE_INPUT}
      *
-     * <р>
+     * <br>
      * Если указатель мыши находится в пределах границ окна консоли и
      * окно имеет фокус клавиатуры, события мыши генерируются движением мыши и
      * нажатия кнопок помещаются в буфер ввода.
-     * <р>
+     * <br>
      * Эти события отбрасываются ReadFile или ReadConsole, даже если этот режим включен.
-     * <р>
+     * <br>
      * Функцию ReadConsoleInput можно использовать для чтения входных записей MOUSE_EVENT из входного буфера.
      * @return value
      */
@@ -135,13 +135,13 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_MOUSE_INPUT}
      *
-     * <р>
+     * <br>
      * Если указатель мыши находится в пределах границ окна консоли и
      * окно имеет фокус клавиатуры, события мыши генерируются движением мыши и
      * нажатия кнопок помещаются в буфер ввода.
-     * <р>
+     * <br>
      * Эти события отбрасываются ReadFile или ReadConsole, даже если этот режим включен.
-     * <р>
+     * <br>
      * Функцию ReadConsoleInput можно использовать для чтения входных записей MOUSE_EVENT из входного буфера.
      * @param switchOn value
      * @return new mode with switched flag
@@ -154,14 +154,14 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_PROCESSED_INPUT}
      *
-     * <р>
+     * <br>
      * CTRL+C обрабатывается системой и не помещается в буфер ввода.
      *
-     * <р>
+     * <br>
      * Если входной буфер считывается с помощью ReadFile или ReadConsole, другие клавиши управления
      * обрабатываются системой и не возвращаются в буфер ReadFile или ReadConsole.
      *
-     * <р>
+     * <br>
      * Если также включен режим ENABLE_LINE_INPUT, Backspace, возврат каретки,
      * и символы перевода строки обрабатываются системой.
      * @return value
@@ -173,14 +173,14 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_PROCESSED_INPUT}
      *
-     * <р>
+     * <br>
      * CTRL+C обрабатывается системой и не помещается в буфер ввода.
      *
-     * <р>
+     * <br>
      * Если входной буфер считывается с помощью ReadFile или ReadConsole, другие клавиши управления
      * обрабатываются системой и не возвращаются в буфер ReadFile или ReadConsole.
      *
-     * <р>
+     * <br>
      * Если также включен режим ENABLE_LINE_INPUT, Backspace, возврат каретки,
      * и символы перевода строки обрабатываются системой.
      * @param switchOn value
@@ -194,11 +194,11 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_QUICK_EDIT_MODE}
      *
-     * <р>
+     * <br>
      * Этот флаг позволяет пользователю использовать мышь для выбора и редактирования текста.
-     * <р>
+     * <br>
      * Чтобы включить этот режим, используйте ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS.
-     * <р>
+     * <br>
      * Чтобы отключить этот режим, используйте ENABLE_EXTENDED_FLAGS без этого флага.
      * @return value
      */
@@ -209,11 +209,11 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_QUICK_EDIT_MODE}
      *
-     * <р>
+     * <br>
      * Этот флаг позволяет пользователю использовать мышь для выбора и редактирования текста.
-     * <р>
+     * <br>
      * Чтобы включить этот режим, используйте ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS.
-     * <р>
+     * <br>
      * Чтобы отключить этот режим, используйте ENABLE_EXTENDED_FLAGS без этого флага.
      * @param switchOn value
      * @return new mode with switched flag
@@ -226,11 +226,11 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_WINDOW_INPUT}
      *
-     *  <р>
+     *  <br>
      *  Взаимодействия с пользователем, которые изменяют размер экранного буфера консоли,
      *  сообщается в буфере ввода консоли.
      *
-     *  <р>
+     *  <br>
      *  Информация об этих событиях может быть прочитана из входного буфера
      *  приложениями, использующими функцию ReadConsoleInput,
      *  но не теми, кто использует ReadFile или ReadConsole.
@@ -244,11 +244,11 @@ public class InputMode {
     /**
      * switch flag {@link InputModeFlags#ENABLE_WINDOW_INPUT}
      *
-     *  <р>
+     *  <br>
      *  Взаимодействия с пользователем, которые изменяют размер экранного буфера консоли,
      *  сообщается в буфере ввода консоли.
      *
-     *  <р>
+     *  <br>
      *  Информация об этих событиях может быть прочитана из входного буфера
      *  приложениями, использующими функцию ReadConsoleInput,
      *  но не теми, кто использует ReadFile или ReadConsole.
@@ -263,12 +263,12 @@ public class InputMode {
     /**
      * read flag {@link InputModeFlags#ENABLE_VIRTUAL_TERMINAL_INPUT}
      *
-     * <р>
+     * <br>
      * Установка этого флага направляет механизм обработки виртуального терминала.
      * для преобразования пользовательского ввода, полученного окном консоли, в последовательности виртуального терминала консоли, которые
      * может быть получен вспомогательным приложением с помощью функций ReadFile или ReadConsole.
      *
-     * <р>
+     * <br>
      * Типичное использование этого флага предполагается в сочетании с ENABLE_VIRTUAL_TERMINAL_PROCESSING на
      * дескриптор вывода для подключения к приложению
      * который общается исключительно через последовательности виртуальных терминалов.
@@ -280,12 +280,12 @@ public class InputMode {
 
     /**
      * switch flag {@link InputModeFlags#ENABLE_VIRTUAL_TERMINAL_INPUT}
-     * <р>
+     * <br>
      * Установка этого флага направляет механизм обработки виртуального терминала.
      * для преобразования пользовательского ввода, полученного окном консоли, в последовательности виртуального терминала консоли, которые
      * может быть получен вспомогательным приложением с помощью функций ReadFile или ReadConsole.
      *
-     * <р>
+     * <br>
      * Типичное использование этого флага предполагается в сочетании с ENABLE_VIRTUAL_TERMINAL_PROCESSING на
      * дескриптор вывода для подключения к приложению
      * который общается исключительно через последовательности виртуальных терминалов.

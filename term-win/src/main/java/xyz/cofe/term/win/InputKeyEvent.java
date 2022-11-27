@@ -4,6 +4,7 @@ import com.sun.jna.platform.win32.Wincon;
 
 /**
  * <table>
+ *     <caption>codes of keys</caption>
  *     <thead style="font-weight:bold">
  *         <tr>
  *            <td>KeyName</td>
